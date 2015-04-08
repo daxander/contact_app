@@ -27,11 +27,12 @@ class ContactList
       when 'new'
         ContactList.new_contact
       when 'list'
-        Contact.all
+        puts Contact.all
+
       when 'show'
-        Contact.show(@secondary_input.to_i)
+        puts Contact.show(@secondary_input.to_i)
       when 'find'
-        Contact.find(@secondary_input)
+        puts Contact.find(@secondary_input)
       when 'help'
         ContactList.menu
       else
@@ -63,5 +64,6 @@ class ContactList
     end
 end
 
+Contact.init
 ContactList.menu_select
 

@@ -9,10 +9,14 @@ class Contact
     @phone_numbers = phone_numbers
   end
  
-  # def to_s
-  #   # TODO: return string representation of Contact
-  #   "#{@name},#{@email}"
-  # end
+  def to_s
+    # TODO: return string representation of Contact
+    message = "#{@name}, #{@email}"
+    phone_numbers.each do |phone|
+      message << phone.to_s
+    end
+    message
+  end
 
   # def to_array
   #   [@name, @email, @phone_numbers]
@@ -20,7 +24,24 @@ class Contact
   
   ## Class Methods
   class << self
-    @@list_of_contacts = CSV.read('contacts.csv')
+
+    def init
+      @@list_of_contacts = []
+
+      CSV.readlines('contacts.csv').each do |row|
+        phones = []
+        name = row[0]
+        email = row[1]
+        row[2..-1].each do |phone|
+          @parts = phone.split(":")
+          type = @parts[0]
+          digits = @parts[1]
+          phones << PhoneNumber.new(type, digits)
+        end
+        @@list_of_contacts << Contact.new(name, email, phones)
+      end
+    end
+
 
     def create(name, email, phone_numbers=[])
       # TODO: Will initialize a contact as well as add it to the list of contacts
@@ -44,30 +65,28 @@ class Contact
  
     def find(search_term)
       # TODO: Will find and return contact by index
+      line = []
       @@list_of_contacts.each_with_index do |row, real_index|
-
-        if (row[0].include?(search_term) || row[1].include?(search_term))
-          puts "#{real_index} : #{row[0]} (#{row[1]})" 
-        end
-        if search_term.to_i == real_index
-          puts "#{real_index} : #{row[0]} (#{row[1]})" 
+        if (row.name.include?(search_term) || row.email.include?(search_term))
+          line << "#{real_index} : #{row}" 
         end
       end
+      line
     end
  
     def all
-      # TODO: Return the list of contacts, as is
+      line = []
       @@list_of_contacts.each_with_index do |row, real_index|
-        real_index += 1
-        puts "#{real_index} : #{row[0]} (#{row[1]})"
+        line << "#{real_index} : #{row}"
       end
+      line
     end
     
     def show(index)
       # TODO: Show a contact, based on ID
       @@list_of_contacts.each_with_index do |row, real_index|
         if real_index == index 
-          puts "#{real_index} : #{row[0]} (#{row[1]})"
+          puts "#{real_index} : #{row}"
           return
         end
       end 

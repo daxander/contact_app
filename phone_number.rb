@@ -6,4 +6,8 @@ class PhoneNumber
     @digits = digits
   end
 
+  def to_s
+    " #{@type}: (#{@digits})"
+  end
+
 end
