@@ -1,6 +1,7 @@
 require 'csv'
 require_relative 'contact'
 require_relative 'contact_database'
+require_relative 'phone_number'
 
 class ContactList 
     
@@ -31,7 +32,6 @@ class ContactList
         Contact.show(@secondary_input.to_i)
       when 'find'
         Contact.find(@secondary_input)
-      when 'phone'
       when 'help'
         ContactList.menu
       else
@@ -41,11 +41,25 @@ class ContactList
     end
 
     def self.new_contact
+      phone_numbers = []
       puts "What is the contact's name?"
       contact_name = self.get_input.to_s
       puts "What is the contact's email?"
       contact_email = self.get_input.to_s
-      puts Contact.create(contact_name, contact_email)
+      puts "Do you want to add a phone number? (yes/no)"
+      user_answer = self.get_input
+        while user_answer == 'yes'
+          puts "Type Phone number Type"
+          type = self.get_input
+          puts "Type the Phone Number"
+          digits = self.get_input
+          phone_numbers << PhoneNumber.new(type,digits)
+          puts "Do you want to add a phone number? (yes/no)"
+          user_answer = self.get_input
+        end
+      puts Contact.create(contact_name, contact_email, phone_numbers)
+    
+
     end
 end
 
